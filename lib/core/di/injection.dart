@@ -23,7 +23,10 @@ import 'package:market_list/features/settings/data/datasources/settings_local_da
 import 'package:market_list/features/settings/data/mappers/settings_mapper.dart';
 import 'package:market_list/features/settings/data/repositories/onboarding_repository_impl.dart';
 import 'package:market_list/features/settings/data/repositories/settings_repository_impl.dart';
+import 'package:market_list/core/domain/value_objects/currency_code.dart';
+import 'package:market_list/core/router/app_router.dart';
 import 'package:market_list/features/items/presentation/bloc/list_detail_bloc.dart';
+import 'package:market_list/features/items/presentation/cubit/item_form_cubit.dart';
 import 'package:market_list/features/settings/domain/repositories/onboarding_repository.dart';
 import 'package:market_list/features/settings/domain/repositories/settings_repository.dart';
 import 'package:market_list/features/settings/domain/usecases/complete_onboarding.dart';
@@ -252,6 +255,21 @@ Future<void> configureDependencies({AppDatabase? database}) async {
         setDefaultCurrency: getIt(),
         setThemeMode: getIt(),
         completeOnboarding: getIt(),
+      ),
+    );
+  }
+  if (!getIt.isRegistered<ItemFormCubit>()) {
+    getIt.registerFactoryParam<ItemFormCubit, ItemFormArgs, void>(
+      (args, _) => ItemFormCubit(
+        listId: args.listId,
+        itemId: args.itemId,
+        initialCurrency: CurrencyCode.fromCode(args.initialCurrency),
+        addItem: getIt(),
+        updateItem: getIt(),
+        getItem: getIt(),
+        deleteItem: getIt(),
+        hasDuplicateItemName: getIt(),
+        validateItemDraft: getIt(),
       ),
     );
   }

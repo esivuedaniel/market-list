@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:market_list/core/di/injection.dart';
+import 'package:market_list/features/items/domain/entities/shopping_item.dart';
 import 'package:market_list/features/items/presentation/bloc/list_detail_bloc.dart';
 import 'package:market_list/features/items/presentation/bloc/list_detail_event.dart';
+import 'package:market_list/features/items/presentation/cubit/item_form_cubit.dart';
+import 'package:market_list/features/items/presentation/pages/item_form_page.dart';
 import 'package:market_list/features/items/presentation/pages/list_detail_page.dart';
 import 'package:market_list/features/settings/presentation/pages/settings_page.dart';
 import 'package:market_list/features/shopping_lists/presentation/cubit/lists_cubit.dart';
@@ -60,9 +63,14 @@ class AppRouter {
           ),
         );
       case itemForm:
-        return MaterialPageRoute<void>(
+        final args = routeSettings.arguments as ItemFormArgs? ??
+            const ItemFormArgs(listId: '', initialCurrency: 'USD');
+        return MaterialPageRoute<ShoppingItem?>(
           settings: routeSettings,
-          builder: (_) => const _PlaceholderScreen(title: 'Item Form'),
+          builder: (_) => BlocProvider<ItemFormCubit>(
+            create: (_) => getIt<ItemFormCubit>(param1: args)..load(),
+            child: const ItemFormPage(),
+          ),
         );
       default:
         return MaterialPageRoute<void>(
@@ -76,30 +84,3 @@ class AppRouter {
   }
 }
 
-class _PlaceholderScreen extends StatelessWidget {
-  const _PlaceholderScreen({required this.title});
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-        backgroundColor: theme.colorScheme.primary,
-        foregroundColor: theme.colorScheme.onPrimary,
-      ),
-      body: Center(
-        child: Text(
-          title,
-          style: theme.textTheme.headlineMedium,
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(Icons.add),
-      ),
-    );
-  }
-}
