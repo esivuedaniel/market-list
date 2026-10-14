@@ -29,6 +29,8 @@ enum CurrencyCode {
     return parsed;
   }
 
+  static CurrencyCode fromCode(String code) => parse(code);
+
   static CurrencyCode fromCountryCode(String? countryCode) {
     if (countryCode == null) return CurrencyCode.usd;
     final upper = countryCode.trim().toUpperCase();
