@@ -23,6 +23,7 @@ import 'package:market_list/features/settings/data/datasources/settings_local_da
 import 'package:market_list/features/settings/data/mappers/settings_mapper.dart';
 import 'package:market_list/features/settings/data/repositories/onboarding_repository_impl.dart';
 import 'package:market_list/features/settings/data/repositories/settings_repository_impl.dart';
+import 'package:market_list/features/items/presentation/bloc/list_detail_bloc.dart';
 import 'package:market_list/features/settings/domain/repositories/onboarding_repository.dart';
 import 'package:market_list/features/settings/domain/repositories/settings_repository.dart';
 import 'package:market_list/features/settings/domain/usecases/complete_onboarding.dart';
@@ -217,6 +218,20 @@ Future<void> configureDependencies({AppDatabase? database}) async {
   }
 
   // 9. State holders
+  if (!getIt.isRegistered<ListDetailBloc>()) {
+    getIt.registerFactory<ListDetailBloc>(
+      () => ListDetailBloc(
+        watchListDetail: getIt(),
+        setItemBought: getIt(),
+        deleteItem: getIt(),
+        restoreItem: getIt(),
+        renameList: getIt(),
+        setListCurrency: getIt(),
+        deleteList: getIt(),
+        addItem: getIt(),
+      ),
+    );
+  }
   if (!getIt.isRegistered<ListsCubit>()) {
     getIt.registerFactory<ListsCubit>(
       () => ListsCubit(

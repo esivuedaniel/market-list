@@ -14,37 +14,61 @@ import 'package:market_list/core/di/injection.dart';
 import 'package:market_list/features/settings/presentation/widgets/onboarding_sheet.dart';
 import 'package:market_list/features/shopping_lists/presentation/cubit/lists_cubit.dart';
 import 'package:market_list/features/shopping_lists/presentation/cubit/lists_state.dart';
+import 'package:market_list/features/items/presentation/bloc/list_detail_bloc.dart';
+import 'package:market_list/features/items/presentation/bloc/list_detail_event.dart';
+import 'package:market_list/features/items/presentation/bloc/list_detail_state.dart';
 
 class MockSettingsCubit extends MockCubit<SettingsState>
     implements SettingsCubit {}
 
 class MockListsCubit extends MockCubit<ListsState> implements ListsCubit {}
 
+class MockListDetailBloc
+    extends MockBloc<ListDetailEvent, ListDetailState>
+    implements ListDetailBloc {}
+
 void main() {
   late MockSettingsCubit mockSettingsCubit;
   late MockListsCubit mockListsCubit;
+  late MockListDetailBloc mockListDetailBloc;
 
   setUpAll(() {
     registerFallbackValue(CurrencyCode.usd);
     registerFallbackValue(AppThemeMode.system);
+    registerFallbackValue(const ListDetailStarted(''));
   });
 
   setUp(() {
     mockSettingsCubit = MockSettingsCubit();
     mockListsCubit = MockListsCubit();
+    mockListDetailBloc = MockListDetailBloc();
+
     when(() => mockListsCubit.state)
         .thenReturn(const ListsState(status: ListsStatus.success));
     when(() => mockListsCubit.watch()).thenAnswer((_) async {});
+
+    when(() => mockListDetailBloc.state).thenReturn(
+      const ListDetailState(status: ListDetailStatus.success),
+    );
+    when(() => mockListDetailBloc.stream).thenAnswer((_) => const Stream.empty());
 
     if (getIt.isRegistered<ListsCubit>()) {
       getIt.unregister<ListsCubit>();
     }
     getIt.registerFactory<ListsCubit>(() => mockListsCubit);
+
+    if (getIt.isRegistered<ListDetailBloc>()) {
+      getIt.unregister<ListDetailBloc>();
+    }
+    getIt.registerFactory<ListDetailBloc>(() => mockListDetailBloc);
   });
 
   tearDown(() {
     if (getIt.isRegistered<ListsCubit>()) {
       getIt.unregister<ListsCubit>();
+    }
+    if (getIt.isRegistered<ListDetailBloc>()) {
+      getIt.unregister<ListDetailBloc>();
     }
   });
 

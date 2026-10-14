@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:market_list/core/di/injection.dart';
+import 'package:market_list/features/items/presentation/bloc/list_detail_bloc.dart';
+import 'package:market_list/features/items/presentation/bloc/list_detail_event.dart';
+import 'package:market_list/features/items/presentation/pages/list_detail_page.dart';
 import 'package:market_list/features/settings/presentation/pages/settings_page.dart';
 import 'package:market_list/features/shopping_lists/presentation/cubit/lists_cubit.dart';
 import 'package:market_list/features/shopping_lists/presentation/pages/lists_page.dart';
@@ -46,9 +49,15 @@ class AppRouter {
           builder: (_) => const SettingsPage(),
         );
       case listDetail:
+        final args = routeSettings.arguments as ListDetailArgs?;
+        final listId = args?.listId ?? '';
         return MaterialPageRoute<void>(
           settings: routeSettings,
-          builder: (_) => const _PlaceholderScreen(title: 'List Detail'),
+          builder: (_) => BlocProvider<ListDetailBloc>(
+            create: (_) => getIt<ListDetailBloc>()
+              ..add(ListDetailStarted(listId)),
+            child: const ListDetailPage(),
+          ),
         );
       case itemForm:
         return MaterialPageRoute<void>(
