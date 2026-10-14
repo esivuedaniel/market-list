@@ -74,3 +74,4 @@ Descriptions live in the PRD. Do not copy them here. Reason: one source of truth
 | D-012 | 2026-10-14 | user | Which country or market launches first? | No launch country set yet. | Section 16 |
 | D-013 | 2026-10-14 | user | Do you accept the first-run currency sheet as the first thing a new user sees? | Yes, show the first-run currency sheet first. | AD-13, FR-092 |
 | D-014 | 2026-10-14 | user | Are Android 7.0 (API 24) and iOS 13 supported by Flutter minimums? | Yes. Flutter 3.38.3 supports Android 5.0+ (API 21) and iOS 12.0+, covering the minimum targets. | AS-08 |
+| D-015 | 2026-10-14 | user | Where should failure_messages.dart be placed? | Create lib/core/widgets/failure_messages.dart so all feature presentation layers can import it without violating import rules. | PRD 9.1, 9.6, 12, AGENTS.md |

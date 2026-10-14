@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:market_list/features/settings/presentation/pages/settings_page.dart';
 
 class ListDetailArgs {
   const ListDetailArgs({required this.listId});
@@ -35,7 +36,7 @@ class AppRouter {
       case settings:
         return MaterialPageRoute<void>(
           settings: routeSettings,
-          builder: (_) => const _PlaceholderScreen(title: 'Settings'),
+          builder: (_) => const SettingsPage(),
         );
       case listDetail:
         return MaterialPageRoute<void>(
