@@ -119,6 +119,7 @@ void main() {
       expect(Money.zero.minor, 0);
 
       expect(() => Money.parse('invalid'), throwsFormatException);
+      expect(const Money.fromMinor(100).minor, 100);
 
       expect(const Money(0).isValid, isTrue);
       expect(const Money(9999999999).isValid, isTrue);

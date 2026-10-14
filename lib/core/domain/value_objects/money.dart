@@ -4,6 +4,7 @@ import 'package:market_list/core/domain/value_objects/quantity.dart';
 
 class Money extends Equatable implements Comparable<Money> {
   const Money(this.minor);
+  const Money.fromMinor(this.minor);
 
   final int minor;
 

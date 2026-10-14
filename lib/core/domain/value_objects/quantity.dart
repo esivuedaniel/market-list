@@ -3,6 +3,7 @@ import 'package:market_list/core/constants/app_limits.dart';
 
 class Quantity extends Equatable {
   const Quantity(this.milli);
+  const Quantity.fromMilli(this.milli);
 
   final int milli;
 

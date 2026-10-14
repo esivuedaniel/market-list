@@ -1,5 +1,4 @@
-class TextNormalizer {
-  const TextNormalizer._();
+abstract final class TextNormalizer {
 
   static final RegExp _whitespaceRun = RegExp(r'\s+');
   static final RegExp _controlChars = RegExp(r'[\x00-\x1F\x7F-\x9F]');

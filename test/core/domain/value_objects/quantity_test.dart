@@ -38,6 +38,7 @@ void main() {
 
     test('AS-02 parse throws on invalid string', () {
       expect(() => Quantity.parse('invalid'), throwsFormatException);
+      expect(const Quantity.fromMilli(2500).milli, 2500);
       expect(const Quantity(2500).props, [2500]);
       expect(const Quantity(2500).toString(), 'Quantity(2500 milli)');
       expect(Quantity.zero.milli, 0);
