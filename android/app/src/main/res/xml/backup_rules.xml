@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <include domain="file" path="app_flutter/market_list.sqlite" />
+    <include domain="file" path="market_list.sqlite" />
+    <include domain="database" path="market_list.sqlite" />
+</full-backup-content>

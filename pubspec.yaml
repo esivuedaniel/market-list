@@ -1,5 +1,5 @@
 name: market_list
-description: "A new Flutter project."
+description: "Market List - offline food shopping lists."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -72,4 +72,23 @@ flutter:
         - asset: assets/fonts/NotoSans-Regular.ttf
         - asset: assets/fonts/NotoSans-Bold.ttf
           weight: 700
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon/app_icon.png"
+  min_sdk_android: 24
+  adaptive_icon_background: "#F57C00"
+  adaptive_icon_foreground: "assets/icon/app_icon_foreground.png"
+
+flutter_native_splash:
+  color: "#F57C00"
+  image: "assets/icon/app_icon_foreground.png"
+  color_dark: "#141210"
+  image_dark: "assets/icon/app_icon_foreground.png"
+  android_12:
+    color: "#F57C00"
+    image: "assets/icon/app_icon_foreground.png"
+    color_dark: "#141210"
+    image_dark: "assets/icon/app_icon_foreground.png"
 

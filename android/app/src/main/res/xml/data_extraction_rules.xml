@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data-extraction-rules>
+    <cloud-backup>
+        <include domain="file" path="app_flutter/market_list.sqlite" />
+        <include domain="file" path="market_list.sqlite" />
+        <include domain="database" path="market_list.sqlite" />
+    </cloud-backup>
+    <device-transfer>
+        <include domain="file" path="app_flutter/market_list.sqlite" />
+        <include domain="file" path="market_list.sqlite" />
+        <include domain="database" path="market_list.sqlite" />
+    </device-transfer>
+</data-extraction-rules>
+
