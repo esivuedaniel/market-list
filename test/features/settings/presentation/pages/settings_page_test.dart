@@ -127,5 +127,42 @@ void main() {
       expect(find.text('Could not save your setting.'), findsOneWidget);
       verify(() => mockSettingsCubit.messageHandled()).called(1);
     });
+
+    testWidgets('NFR-009 and NFR-011 renders without overflow on 320x568 dp screen and text scale 2.0',
+        (tester) async {
+      when(() => mockSettingsCubit.state).thenReturn(
+        const SettingsState(
+          status: SettingsStatus.loaded,
+          settings: testSettings,
+        ),
+      );
+
+      tester.view.physicalSize = const Size(320 * 2.0, 568 * 2.0);
+      tester.view.devicePixelRatio = 2.0;
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: ThemeData.light(useMaterial3: true),
+          home: MediaQuery(
+            data: const MediaQueryData(
+              textScaler: TextScaler.linear(2.0),
+              size: Size(320, 568),
+            ),
+            child: BlocProvider<SettingsCubit>.value(
+              value: mockSettingsCubit,
+              child: const SettingsPage(),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(tester.takeException(), isNull);
+      expect(find.text('Settings'), findsOneWidget);
+    });
   });
 }

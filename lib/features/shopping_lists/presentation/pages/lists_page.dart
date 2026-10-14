@@ -44,6 +44,7 @@ class ListsPage extends StatelessWidget {
             actions: [
               IconButton(
                 icon: const Icon(Icons.settings),
+                tooltip: 'Settings',
                 onPressed: () {
                   Navigator.of(context).pushNamed(AppRouter.settings);
                 },

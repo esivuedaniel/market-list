@@ -344,5 +344,60 @@ void main() {
       expect(find.text('Error saving item'), findsOneWidget);
       verify(() => mockBloc.add(const MessageHandled())).called(1);
     });
+
+    testWidgets('NFR-009 and NFR-011 renders without overflow on 320x568 dp screen and text scale 2.0',
+        (tester) async {
+      when(() => mockBloc.state).thenReturn(
+        ListDetailState(
+          status: ListDetailStatus.success,
+          detail: testDetail,
+        ),
+      );
+
+      tester.view.physicalSize = const Size(320 * 2.0, 568 * 2.0);
+      tester.view.devicePixelRatio = 2.0;
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: ThemeData.light(useMaterial3: true),
+          home: MediaQuery(
+            data: const MediaQueryData(
+              textScaler: TextScaler.linear(2.0),
+              size: Size(320, 568),
+            ),
+            child: BlocProvider<ListDetailBloc>.value(
+              value: mockBloc,
+              child: const ListDetailPage(),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(tester.takeException(), isNull);
+      expect(find.text('Market list'), findsOneWidget);
+      expect(find.text('Tomatoes'), findsOneWidget);
+    });
+
+    testWidgets('NFR-012 app bar icon buttons have tooltips and semantics',
+        (tester) async {
+      when(() => mockBloc.state).thenReturn(
+        ListDetailState(
+          status: ListDetailStatus.success,
+          detail: testDetail,
+        ),
+      );
+
+      await tester.pumpWidget(buildTestableWidget());
+      await tester.pumpAndSettle();
+
+      expect(find.byTooltip('Search'), findsOneWidget);
+      expect(find.byTooltip('Share list'), findsOneWidget);
+      expect(find.byTooltip('List options'), findsOneWidget);
+    });
   });
 }

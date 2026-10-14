@@ -352,5 +352,64 @@ void main() {
       expect(find.text('Detail Screen'), findsOneWidget);
       verify(() => mockListsCubit.createdListHandled()).called(1);
     });
+
+    testWidgets('NFR-009 and NFR-011 renders without overflow on 320x568 dp screen and text scale 2.0',
+        (tester) async {
+      when(() => mockListsCubit.state).thenReturn(
+        ListsState(
+          status: ListsStatus.success,
+          lists: [testSummary],
+        ),
+      );
+
+      tester.view.physicalSize = const Size(320 * 2.0, 568 * 2.0);
+      tester.view.devicePixelRatio = 2.0;
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: ThemeData.light(useMaterial3: true),
+          home: MediaQuery(
+            data: const MediaQueryData(
+              textScaler: TextScaler.linear(2.0),
+              size: Size(320, 568),
+            ),
+            child: MultiBlocProvider(
+              providers: [
+                BlocProvider<ListsCubit>.value(value: mockListsCubit),
+                BlocProvider<SettingsCubit>.value(value: mockSettingsCubit),
+              ],
+              child: const ListsPage(),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(tester.takeException(), isNull);
+      expect(find.text('Sunday market'), findsOneWidget);
+    });
+
+    testWidgets('NFR-012 app bar settings action has tooltip and semantics',
+        (tester) async {
+      when(() => mockListsCubit.state).thenReturn(
+        const ListsState(status: ListsStatus.success),
+      );
+
+      await tester.pumpWidget(
+        buildTestableWidget(
+          state: const ListsState(status: ListsStatus.success),
+        ),
+      );
+      await tester.pump();
+
+      final settingsButton = find.widgetWithIcon(IconButton, Icons.settings);
+      expect(settingsButton, findsOneWidget);
+      final widget = tester.widget<IconButton>(settingsButton);
+      expect(widget.tooltip, isNotEmpty);
+    });
   });
 }

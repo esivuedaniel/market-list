@@ -69,6 +69,7 @@ class ItemTile extends StatelessWidget {
                   },
                 ),
                 Expanded(
+                  flex: 3,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
@@ -86,6 +87,8 @@ class ItemTile extends StatelessWidget {
                       const SizedBox(height: 2),
                       Text(
                         subtitleText,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: colorScheme.onSurfaceVariant,
                           decoration: textDecoration,
@@ -95,13 +98,20 @@ class ItemTile extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 8),
-                Text(
-                  lineTotalText,
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                    fontFeatures: const [FontFeature.tabularFigures()],
-                    decoration: textDecoration,
-                    color: textColor,
+                Flexible(
+                  flex: 2,
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      lineTotalText,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        fontFeatures: const [FontFeature.tabularFigures()],
+                        decoration: textDecoration,
+                        color: textColor,
+                      ),
+                    ),
                   ),
                 ),
                 PopupMenuButton<ItemAction>(

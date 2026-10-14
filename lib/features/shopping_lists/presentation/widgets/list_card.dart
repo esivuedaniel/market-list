@@ -44,6 +44,7 @@ class ListCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
+                flex: 3,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -61,22 +62,32 @@ class ListCard extends StatelessWidget {
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: theme.colorScheme.onSurfaceVariant,
                       ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
               ),
               const SizedBox(width: 8),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    totalText,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
+              Flexible(
+                flex: 2,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        totalText,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          fontFeatures: const [FontFeature.tabularFigures()],
+                        ),
+                      ),
                     ),
-                  ),
-                  PopupMenuButton<String>(
-                    icon: const Icon(Icons.more_vert),
+                    PopupMenuButton<String>(
+                      icon: const Icon(Icons.more_vert),
+                      tooltip: 'List options',
                     onSelected: (action) {
                       switch (action) {
                         case 'rename':
@@ -110,7 +121,8 @@ class ListCard extends StatelessWidget {
                   ),
                 ],
               ),
-            ],
+            ),
+          ],
           ),
         ),
       ),
