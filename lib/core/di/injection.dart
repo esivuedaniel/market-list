@@ -46,6 +46,18 @@ import 'package:market_list/features/shopping_lists/domain/usecases/duplicate_li
 import 'package:market_list/features/shopping_lists/domain/usecases/rename_list.dart';
 import 'package:market_list/features/shopping_lists/domain/usecases/set_list_currency.dart';
 import 'package:market_list/features/shopping_lists/domain/usecases/watch_lists.dart';
+import 'package:market_list/features/export/data/services/pdf_list_generator.dart';
+import 'package:market_list/features/export/data/services/share_plus_service.dart';
+import 'package:market_list/features/export/data/services/temp_export_file_store.dart';
+import 'package:market_list/features/export/domain/services/export_file_store.dart';
+import 'package:market_list/features/export/domain/services/list_pdf_generator.dart';
+import 'package:market_list/features/export/domain/services/share_service.dart';
+import 'package:market_list/features/export/domain/usecases/build_list_pdf.dart';
+import 'package:market_list/features/export/domain/usecases/build_list_text.dart';
+import 'package:market_list/features/export/domain/usecases/cleanup_exports.dart';
+import 'package:market_list/features/export/domain/usecases/share_file.dart';
+import 'package:market_list/features/export/domain/usecases/share_text.dart';
+import 'package:market_list/features/export/presentation/cubit/share_cubit.dart';
 
 final getIt = GetIt.instance;
 
@@ -270,6 +282,66 @@ Future<void> configureDependencies({AppDatabase? database}) async {
         deleteItem: getIt(),
         hasDuplicateItemName: getIt(),
         validateItemDraft: getIt(),
+      ),
+    );
+  }
+
+  // 10. Export services and use cases
+  if (!getIt.isRegistered<TempExportFileStore>()) {
+    getIt.registerLazySingleton<TempExportFileStore>(
+      () => TempExportFileStore(clock: getIt()),
+    );
+  }
+  if (!getIt.isRegistered<ExportFileStore>()) {
+    getIt.registerLazySingleton<ExportFileStore>(
+      () => getIt<TempExportFileStore>(),
+    );
+  }
+  if (!getIt.isRegistered<ListPdfGenerator>()) {
+    getIt.registerLazySingleton<ListPdfGenerator>(
+      () => PdfListGenerator(
+        fileStore: getIt<TempExportFileStore>(),
+        clock: getIt(),
+      ),
+    );
+  }
+  if (!getIt.isRegistered<ShareService>()) {
+    getIt.registerLazySingleton<ShareService>(
+      () => SharePlusService(),
+    );
+  }
+  if (!getIt.isRegistered<BuildListPdf>()) {
+    getIt.registerLazySingleton(
+      () => BuildListPdf(
+        itemRepository: getIt(),
+        pdfGenerator: getIt(),
+      ),
+    );
+  }
+  if (!getIt.isRegistered<BuildListText>()) {
+    getIt.registerLazySingleton(
+      () => BuildListText(
+        itemRepository: getIt(),
+        clock: getIt(),
+      ),
+    );
+  }
+  if (!getIt.isRegistered<ShareFile>()) {
+    getIt.registerLazySingleton(() => ShareFile(getIt()));
+  }
+  if (!getIt.isRegistered<ShareText>()) {
+    getIt.registerLazySingleton(() => ShareText(getIt()));
+  }
+  if (!getIt.isRegistered<CleanupExports>()) {
+    getIt.registerLazySingleton(() => CleanupExports(getIt()));
+  }
+  if (!getIt.isRegistered<ShareCubit>()) {
+    getIt.registerFactory<ShareCubit>(
+      () => ShareCubit(
+        buildListPdf: getIt(),
+        buildListText: getIt(),
+        shareFile: getIt(),
+        shareText: getIt(),
       ),
     );
   }

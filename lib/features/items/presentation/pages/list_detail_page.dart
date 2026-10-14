@@ -15,6 +15,7 @@ import 'package:market_list/features/items/presentation/bloc/list_detail_event.d
 import 'package:market_list/features/items/presentation/bloc/list_detail_state.dart';
 import 'package:market_list/features/items/presentation/widgets/item_tile.dart';
 import 'package:market_list/features/items/presentation/widgets/summary_card.dart';
+import 'package:market_list/features/export/presentation/widgets/share_sheet.dart';
 
 enum _ListMenuAction { rename, currency, delete, seed }
 
@@ -204,7 +205,7 @@ class _ListDetailAppBarState extends State<_ListDetailAppBar> {
               : FailureMessages.emptyListShareTooltip,
           onPressed: state.canShare
               ? () {
-                  // Share bottom sheet will be connected in M8
+                  ShareBottomSheet.show(context, state.detail!.list.id);
                 }
               : null,
         ),

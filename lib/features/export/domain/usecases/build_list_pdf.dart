@@ -20,12 +20,20 @@ class BuildListPdf implements UseCase<ExportedFile, String> {
   Future<Either<Failure, ExportedFile>> call(String listId) async {
     final detailResult = await _itemRepository.getListDetail(listId);
     return detailResult.fold(
-      Left.new,
-      (detail) {
+      (failure) async => Left(failure),
+      (detail) async {
         if (detail.items.isEmpty) {
           return const Left(ValidationFailure('Cannot export an empty list.'));
         }
-        return _pdfGenerator.generate(PdfDocumentData(listDetail: detail));
+        final pdfResult = await _pdfGenerator.generate(PdfDocumentData(listDetail: detail));
+        return pdfResult.map(
+          (file) => ExportedFile(
+            filePath: file.filePath,
+            fileName: file.fileName,
+            listName: detail.list.name,
+            mimeType: file.mimeType,
+          ),
+        );
       },
     );
   }

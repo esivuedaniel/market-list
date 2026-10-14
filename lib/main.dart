@@ -4,6 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:market_list/app.dart';
 import 'package:market_list/core/di/injection.dart';
+import 'package:market_list/core/usecase/usecase.dart';
+import 'package:market_list/features/export/domain/usecases/cleanup_exports.dart';
 import 'package:market_list/features/settings/presentation/cubit/settings_cubit.dart';
 
 void main() {
@@ -15,6 +17,8 @@ void main() {
       };
 
       await configureDependencies();
+
+      unawaited(getIt<CleanupExports>()(const NoParams()));
 
       final regionCode = PlatformDispatcher.instance.locale.countryCode;
       getIt<SettingsCubit>().start(regionCode);
