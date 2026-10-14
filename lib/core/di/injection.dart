@@ -31,6 +31,7 @@ import 'package:market_list/features/settings/domain/usecases/set_default_curren
 import 'package:market_list/features/settings/domain/usecases/set_theme_mode.dart';
 import 'package:market_list/features/settings/domain/usecases/watch_settings.dart';
 import 'package:market_list/features/settings/presentation/cubit/settings_cubit.dart';
+import 'package:market_list/features/shopping_lists/presentation/cubit/lists_cubit.dart';
 import 'package:market_list/features/shopping_lists/data/datasources/shopping_list_local_data_source.dart';
 import 'package:market_list/features/shopping_lists/data/mappers/shopping_list_mapper.dart';
 import 'package:market_list/features/shopping_lists/data/repositories/shopping_list_repository_impl.dart';
@@ -216,6 +217,18 @@ Future<void> configureDependencies({AppDatabase? database}) async {
   }
 
   // 9. State holders
+  if (!getIt.isRegistered<ListsCubit>()) {
+    getIt.registerFactory<ListsCubit>(
+      () => ListsCubit(
+        watchLists: getIt(),
+        createList: getIt(),
+        renameList: getIt(),
+        setListCurrency: getIt(),
+        deleteList: getIt(),
+        duplicateList: getIt(),
+      ),
+    );
+  }
   if (!getIt.isRegistered<SettingsCubit>()) {
     getIt.registerLazySingleton<SettingsCubit>(
       () => SettingsCubit(

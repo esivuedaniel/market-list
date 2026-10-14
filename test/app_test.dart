@@ -10,13 +10,19 @@ import 'package:market_list/features/settings/domain/entities/app_settings.dart'
 import 'package:market_list/features/settings/domain/entities/app_theme_mode.dart';
 import 'package:market_list/features/settings/presentation/cubit/settings_cubit.dart';
 import 'package:market_list/features/settings/presentation/cubit/settings_state.dart';
+import 'package:market_list/core/di/injection.dart';
 import 'package:market_list/features/settings/presentation/widgets/onboarding_sheet.dart';
+import 'package:market_list/features/shopping_lists/presentation/cubit/lists_cubit.dart';
+import 'package:market_list/features/shopping_lists/presentation/cubit/lists_state.dart';
 
 class MockSettingsCubit extends MockCubit<SettingsState>
     implements SettingsCubit {}
 
+class MockListsCubit extends MockCubit<ListsState> implements ListsCubit {}
+
 void main() {
   late MockSettingsCubit mockSettingsCubit;
+  late MockListsCubit mockListsCubit;
 
   setUpAll(() {
     registerFallbackValue(CurrencyCode.usd);
@@ -25,6 +31,21 @@ void main() {
 
   setUp(() {
     mockSettingsCubit = MockSettingsCubit();
+    mockListsCubit = MockListsCubit();
+    when(() => mockListsCubit.state)
+        .thenReturn(const ListsState(status: ListsStatus.success));
+    when(() => mockListsCubit.watch()).thenAnswer((_) async {});
+
+    if (getIt.isRegistered<ListsCubit>()) {
+      getIt.unregister<ListsCubit>();
+    }
+    getIt.registerFactory<ListsCubit>(() => mockListsCubit);
+  });
+
+  tearDown(() {
+    if (getIt.isRegistered<ListsCubit>()) {
+      getIt.unregister<ListsCubit>();
+    }
   });
 
   group('MarketListApp', () {
@@ -97,7 +118,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.widgetWithText(AppBar, 'Market List'), findsOneWidget);
+      expect(find.widgetWithText(AppBar, 'My Lists'), findsOneWidget);
     });
 
     testWidgets('navigates to /list and calls firstListHandled when firstListId emitted',

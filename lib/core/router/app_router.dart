@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:market_list/core/di/injection.dart';
 import 'package:market_list/features/settings/presentation/pages/settings_page.dart';
+import 'package:market_list/features/shopping_lists/presentation/cubit/lists_cubit.dart';
+import 'package:market_list/features/shopping_lists/presentation/pages/lists_page.dart';
 
 class ListDetailArgs {
   const ListDetailArgs({required this.listId});
@@ -31,7 +35,10 @@ class AppRouter {
       case lists:
         return MaterialPageRoute<void>(
           settings: routeSettings,
-          builder: (_) => const _PlaceholderScreen(title: 'Market List'),
+          builder: (_) => BlocProvider<ListsCubit>(
+            create: (_) => getIt<ListsCubit>()..watch(),
+            child: const ListsPage(),
+          ),
         );
       case settings:
         return MaterialPageRoute<void>(
@@ -51,7 +58,10 @@ class AppRouter {
       default:
         return MaterialPageRoute<void>(
           settings: routeSettings,
-          builder: (_) => const _PlaceholderScreen(title: 'Market List'),
+          builder: (_) => BlocProvider<ListsCubit>(
+            create: (_) => getIt<ListsCubit>()..watch(),
+            child: const ListsPage(),
+          ),
         );
     }
   }

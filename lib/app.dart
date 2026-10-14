@@ -11,36 +11,53 @@ import 'package:market_list/features/settings/presentation/cubit/settings_cubit.
 import 'package:market_list/features/settings/presentation/cubit/settings_state.dart';
 import 'package:market_list/features/settings/presentation/widgets/onboarding_sheet.dart';
 
-final GlobalKey<NavigatorState> appNavigatorKey = GlobalKey<NavigatorState>();
-
-class MarketListApp extends StatelessWidget {
+class MarketListApp extends StatefulWidget {
   const MarketListApp({
     super.key,
     this.settingsCubit,
+    this.navigatorKey,
   });
 
   final SettingsCubit? settingsCubit;
+  final GlobalKey<NavigatorState>? navigatorKey;
+
+  @override
+  State<MarketListApp> createState() => _MarketListAppState();
+}
+
+class _MarketListAppState extends State<MarketListApp> {
+  late final GlobalKey<NavigatorState> _navigatorKey;
+
+  @override
+  void initState() {
+    super.initState();
+    _navigatorKey = widget.navigatorKey ?? GlobalKey<NavigatorState>();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final cubit = settingsCubit ?? getIt<SettingsCubit>();
+    final cubit = widget.settingsCubit ?? getIt<SettingsCubit>();
     return BlocProvider<SettingsCubit>.value(
       value: cubit,
       child: BlocConsumer<SettingsCubit, SettingsState>(
         listenWhen: (prev, curr) => curr.firstListId != null,
         listener: (context, state) {
           if (state.firstListId != null) {
-            appNavigatorKey.currentState?.pushNamed(
-              AppRouter.listDetail,
-              arguments: ListDetailArgs(listId: state.firstListId!),
-            );
-            context.read<SettingsCubit>().firstListHandled();
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              _navigatorKey.currentState?.pushNamed(
+                AppRouter.listDetail,
+                arguments: ListDetailArgs(listId: state.firstListId!),
+              );
+              if (mounted) {
+                context.read<SettingsCubit>().firstListHandled();
+              }
+            });
           }
         },
         builder: (context, state) {
           return MaterialApp(
             title: 'Market List',
-            navigatorKey: appNavigatorKey,
+            navigatorKey: _navigatorKey,
             theme: AppTheme.light,
             darkTheme: AppTheme.dark,
             themeMode: _toThemeMode(state.settings?.themeMode),
