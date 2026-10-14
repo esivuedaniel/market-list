@@ -1,0 +1,33 @@
+# analysis_options.yaml
+#
+# One job: decide what counts as an issue when `flutter analyze` runs.
+# Reason: AGENTS.md requires zero issues. This file makes style rules fail the
+# check, so the agent cannot leave them unfixed.
+
+# Reason: the Flutter team's recommended rule set. Everything below adds to it.
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    # Reason: generated files are never edited by hand. The analyzer must not
+    # ask for edits in files the agent is not allowed to touch.
+    - "**/*.g.dart"
+  errors:
+    # Reason: a hint is easy to ignore. An error stops the check.
+    avoid_print: error
+    prefer_const_constructors: error
+    always_use_package_imports: error
+
+linter:
+  rules:
+    # Reason: a stray print can leak list or item names into logs.
+    # AGENTS.md forbids logging them.
+    avoid_print: true
+
+    # Reason: const widgets are built once. This keeps rebuilds cheap on long
+    # lists.
+    prefer_const_constructors: true
+
+    # Reason: the architecture test reads import lines. A relative import can
+    # hide which layer a file reaches into.
+    always_use_package_imports: true
