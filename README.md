@@ -218,9 +218,6 @@ Sharing opens the system share sheet via `share_plus`. The user picks WhatsApp o
 | `analysis_options.yaml` | Static analysis rules and linter configurations | Product owner |
 | `test/architecture_test.dart` | Automated tests verifying layer isolation and import rules | AI agent during M9; protected afterwards |
 
-## Building with the AI agent
-
-Development proceeds through milestones in order from M0 setup to M10 release preparation. Every milestone commit uses the prefix `M<number>:` to record progress and test coverage. [DECISIONS.md](DECISIONS.md) acts as the permanent record for approved choices and defaults. See [AGENTS.md](AGENTS.md) for full project rules and workflow requirements.
 
 ## Roadmap
 
